@@ -155,8 +155,7 @@ pub struct Config {
 impl Config {
     /// Obtains a [`Config`](consul::Config) from environment variables.
     /// Specifically, looks for `CONSUL_HTTP_TOKEN` and `CONSUL_HTTP_ADDR` as environment variables.
-    /// # Errors
-    /// Returns an [error](env::VarError) if either environment variable is missing.
+    /// If env variables missing, it will fallback to default.
     pub fn from_env() -> Self {
         let token = env::var("CONSUL_HTTP_TOKEN").unwrap_or_default();
         let addr =
@@ -165,6 +164,14 @@ impl Config {
         Config {
             address: addr,
             token: Some(token),
+        }
+    }
+
+    /// Creates new [`Config`](consul::Config) from provided arguments.
+    pub fn new(addr: String, token: Option<String>) -> Self {
+        Self{
+            address: addr,
+            token,
         }
     }
 }
